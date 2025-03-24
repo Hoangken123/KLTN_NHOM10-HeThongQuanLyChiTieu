@@ -3,43 +3,38 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ResetPasswordMail extends Mailable
+class VerifyEmailMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $token;
-    public $email;
-    public $resetUrl;
+    public $verifyUrl;
+    public $fullName;
 
-
-    public function __construct($token, $email)
+    public function __construct($user, $token)
     {
-        $this->token = $token;
-        $this->email = $email;
-        $this->resetUrl = config('app.url') . '/api/reset-password?token=' . $this->token . '&email=' . $this->email;
+        $this->verifyUrl = config('app.url') . '/api/verify-email?token=' . $token;
+        $this->fullName = $user->fullName;
     }
-
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Đặt lại mật khẩu',
+            subject: 'Xác nhận tài khoản'
         );
     }
-
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.reset-password',
+            view: 'emails.verify-email',
             with: [
-                'resetUrl' => $this->resetUrl,
+                'verifyUrl' => $this->verifyUrl,
+                'fullName' => $this->fullName,
             ],
         );
     }

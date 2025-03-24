@@ -10,7 +10,10 @@ Route::get('/example', [ExampleController::class, 'index']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+Route::get('/reset-password', [AuthController::class, 'resetshow']);
 Route::post('/reset-password', [AuthController::class, 'reset']);
+Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

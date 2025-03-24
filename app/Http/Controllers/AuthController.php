@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ResetPasswordMail;
+use App\Mail\VerifyEmailMail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,11 +24,13 @@ class AuthController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name","email","password"},
-     *             @OA\Property(property="name", type="string", example="Nguyen Van A"),
+     *             required={"fullName","email","password"},
+     *             @OA\Property(property="username", type="string", example="user1"),
      *             @OA\Property(property="email", type="string", format="email", example="a@gmail.com"),
      *             @OA\Property(property="password", type="string", example="123456"),
-     *             @OA\Property(property="phone", type="string", example="0912345678")
+     *             @OA\Property(property="phone", type="string", example="0912345678"),
+     *             @OA\Property(property="address", type="string", example="Hanoi"),
+     *             @OA\Property(property="fullName", type="string", example="Nguyen Van A")
      *         )
      *     ),
      *     @OA\Response(
@@ -44,7 +47,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'fullName' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'phone' => 'nullable|unique:users',
@@ -54,19 +57,76 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'fullName'  => $request->fullName,
             'phone' => $request->phone,
             'monthly_income' => 0,
             'monthly_customer_spending' => 0,
             'currency' => 'VND',
-
+            'isActived' => false,
+            'isBlocked' => false,
+            'address' => $request->address,
+            'avatar' => null,
         ]);
 
         $token = $user->createToken('thisprivate')->plainTextToken;
 
+        $verifyToken = Str::random(60);
+        $user->verify_token = $verifyToken;
+        $user->save();
+
+        Mail::to($user->email)->send(new VerifyEmailMail($user, $verifyToken));
+
         return response()->json([
+            'message' => 'Đăng ký thành công, vui lòng kiểm tra email để kích hoạt tài khoản.',
             'user' => $user,
             'token' => $token
         ]);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/verify-email",
+     *     summary="Xác thực email (kích hoạt tài khoản)",
+     *     tags={"Auth"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="query",
+     *         description="Mã token xác thực được gửi qua email",
+     *         required=true,
+     *         @OA\Schema(type="string", example="Abc123xyz456token")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tài khoản đã được kích hoạt thành công.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Tài khoản đã được kích hoạt thành công.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Token không hợp lệ hoặc đã hết hạn.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Token không hợp lệ hoặc đã hết hạn.")
+     *         )
+     *     )
+     * )
+     */
+
+    public function verifyEmail(Request $request)
+    {
+        $token = $request->query('token');
+        $user = User::where('verify_token', $token)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Token không hợp lệ hoặc đã hết hạn.'], 400);
+        }
+
+        $user->isActived = true;
+        $user->verify_token = null;
+        $user->save();
+
+        return response()->json(['message' => 'Tài khoản đã được kích hoạt thành công.']);
     }
 
     /**
@@ -103,8 +163,8 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$user || !Hash::check($request->password, $user->password) || !$user->isActived) {
+            return response()->json(['error' => 'Không được phép đăng nhập'], 401);
         }
 
         $token = $user->createToken('API Token')->plainTextToken;
@@ -115,6 +175,7 @@ class AuthController extends Controller
         ]);
     }
 
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -123,6 +184,15 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ]);
     }
+
+    public function resetshow(Request $request)
+    {
+        $token = $request->query('token');
+        $email = $request->query('email'); 
+        return view('comfirm-password.view-reset-password', compact('token', 'email'));
+    }
+    
+
 
     public function changePassword(Request $request)
     {

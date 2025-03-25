@@ -29,7 +29,10 @@ class User extends Authenticatable
         'monthly_income',
         'monthly_customer_spending',
         'avatar',
-        'currency'
+        'currency',
+        'fullName',
+        'address',
+        'role'
     ];
 
 

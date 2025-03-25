@@ -22,14 +22,14 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "name",
+                                    "fullName",
                                     "email",
                                     "password"
                                 ],
                                 "properties": {
-                                    "name": {
+                                    "username": {
                                         "type": "string",
-                                        "example": "Nguyen Van A"
+                                        "example": "user1"
                                     },
                                     "email": {
                                         "type": "string",
@@ -43,6 +43,14 @@
                                     "phone": {
                                         "type": "string",
                                         "example": "0912345678"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Hanoi"
+                                    },
+                                    "fullName": {
+                                        "type": "string",
+                                        "example": "Nguyen Van A"
                                     }
                                 },
                                 "type": "object"
@@ -56,6 +64,61 @@
                     },
                     "422": {
                         "description": "Dữ liệu không hợp lệ"
+                    }
+                }
+            }
+        },
+        "/api/verify-email": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Xác thực email (kích hoạt tài khoản)",
+                "operationId": "30ad750305b3a9051ad8902b774acaa0",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Mã token xác thực được gửi qua email",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Abc123xyz456token"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tài khoản đã được kích hoạt thành công.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tài khoản đã được kích hoạt thành công."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Token không hợp lệ hoặc đã hết hạn.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token không hợp lệ hoặc đã hết hạn."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -222,5 +285,15 @@
             "name": "Auth",
             "description": "Auth"
         }
-    ]
+    ],
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "description": "Nhập token theo định dạng: Bearer {token}",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
 }

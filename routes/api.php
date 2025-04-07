@@ -26,5 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users', [UserController::class, 'index']);
     Route::put('/user/update-profile', [UserController::class, 'updateProfile']);
     Route::put('/user/avatar', [UserController::class, 'updateAvatar']); 
+    Route::get('/user/{id}', [UserController::class, 'edit']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']); 
 });

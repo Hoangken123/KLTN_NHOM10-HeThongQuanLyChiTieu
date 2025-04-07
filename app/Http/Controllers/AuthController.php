@@ -170,7 +170,6 @@ class AuthController extends Controller
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
             'token' => $token
         ]);
     }
@@ -185,7 +184,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function resetshow(Request $request)
+    public function resetShow(Request $request)
     {
         $token = $request->query('token');
         $email = $request->query('email'); 

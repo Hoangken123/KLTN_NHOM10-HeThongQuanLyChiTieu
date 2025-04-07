@@ -508,46 +508,6 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Thông tin người dùng",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "example": "user1"
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "example": "user1@example.com"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "123456789"
-                                        },
-                                        "fullName": {
-                                            "type": "string",
-                                            "example": "John Doe"
-                                        },
-                                        "address": {
-                                            "type": "string",
-                                            "example": "123 Main St"
-                                        },
-                                        "avatar": {
-                                            "type": "string",
-                                            "example": "avatars/user1.jpg"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Không tìm thấy người dùng"
                     }

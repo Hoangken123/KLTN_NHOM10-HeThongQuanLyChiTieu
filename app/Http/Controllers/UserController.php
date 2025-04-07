@@ -189,20 +189,6 @@ class UserController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(
-     *         response=200,
-     *         description="Thông tin người dùng",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="username", type="string", example="user1"),
-     *             @OA\Property(property="email", type="string", format="email", example="user1@example.com"),
-     *             @OA\Property(property="email", type="string", example="user1@example.com"),
-     *             @OA\Property(property="phone", type="string", example="123456789"),
-     *             @OA\Property(property="fullName", type="string", example="John Doe"),
-     *             @OA\Property(property="address", type="string", example="123 Main St"),
-     *             @OA\Property(property="avatar", type="string", example="avatars/user1.jpg")
-     *         )
-     *     ),
-     *     @OA\Response(
      *         response=404,
      *         description="Không tìm thấy người dùng"
      *     )

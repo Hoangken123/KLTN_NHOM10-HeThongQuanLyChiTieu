@@ -493,13 +493,8 @@
                 "tags": [
                     "User"
                 ],
-<<<<<<< HEAD
-                "summary": "Get user by ID",
-                "operationId": "d8f696420bea235f4916124c9ba1c507",
-=======
                 "summary": "Lấy thông tin người dùng theo ID",
                 "operationId": "06175584a3eb3b8f3a4b51244a43c517",
->>>>>>> 0d69f7754e0b5bb29d397b7c69e16521dfb1e1c4
                 "parameters": [
                     {
                         "name": "id",
@@ -513,55 +508,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Thông tin người dùng",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "example": "user1"
-                                        },
-                                        "email": {
-                                            "type": "string",
-<<<<<<< HEAD
-                                            "format": "email",
-=======
->>>>>>> 0d69f7754e0b5bb29d397b7c69e16521dfb1e1c4
-                                            "example": "user1@example.com"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "123456789"
-                                        },
-                                        "fullName": {
-                                            "type": "string",
-                                            "example": "John Doe"
-                                        },
-                                        "address": {
-                                            "type": "string",
-                                            "example": "123 Main St"
-                                        },
-                                        "avatar": {
-                                            "type": "string",
-                                            "example": "avatars/user1.jpg"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-<<<<<<< HEAD
-=======
-                    },
                     "404": {
                         "description": "Không tìm thấy người dùng"
->>>>>>> 0d69f7754e0b5bb29d397b7c69e16521dfb1e1c4
                     }
                 }
             },

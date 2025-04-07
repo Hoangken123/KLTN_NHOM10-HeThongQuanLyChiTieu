@@ -177,12 +177,15 @@ class UserController extends Controller
      * @OA\Get(
      *     path="/api/user/{id}",
      *     summary="Get user by ID",
+     *     summary="Lấy thông tin người dùng theo ID",
      *     tags={"User"},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="ID của người dùng",
      *         required=true,
+     *         required=true,
+     *         description="ID của người dùng",
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(
@@ -192,20 +195,26 @@ class UserController extends Controller
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="username", type="string", example="user1"),
      *             @OA\Property(property="email", type="string", format="email", example="user1@example.com"),
+     *             @OA\Property(property="email", type="string", example="user1@example.com"),
      *             @OA\Property(property="phone", type="string", example="123456789"),
      *             @OA\Property(property="fullName", type="string", example="John Doe"),
      *             @OA\Property(property="address", type="string", example="123 Main St"),
      *             @OA\Property(property="avatar", type="string", example="avatars/user1.jpg")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Không tìm thấy người dùng"
      *     )
      * )
      */
-    public function show($id)
+    public function edit($id)
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+            return response()->json(['message' => 'Không tìm thấy người dùng'], 404);
         }
+
         return response()->json($user);
     }
 }
